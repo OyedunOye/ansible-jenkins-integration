@@ -21,6 +21,23 @@ agent any
             }
         }
 
+        stage('execute ansible playbook') {
+            steps {
+                script {
+                    echo "calling ansible playbook to configure ec2 instances"
+                    def remote = [:]
+                    remote.name = "my-ansible-server"
+                    remote.host = "172.104.233.61"
+                    remote.allowAnyHosts = true
+                    
+                    withCredentials([sshUserPrivateKey(credentialsId: 'ansible-server-key', keyFileVariable: 'keyfile', usernameVariable: 'user')]) {
+                        remote.user = user
+                        remote.identityFile = keyfile
+                        sshCommand remote: remote, command: "ansible-playbook my-playbook.yaml"
+                    }
+                }
+            }
+        }
         
     }
 }

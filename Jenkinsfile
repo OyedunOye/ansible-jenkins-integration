@@ -1,8 +1,8 @@
 pipeline {
 
-agent any
-    tools {
-        maven 'maven-3.9'
+    agent any
+    environment {
+        ANSIBLE_SERVER = "172.104.233.61"
     }
 
     stages {
@@ -12,9 +12,9 @@ agent any
                 script {
                     echo "copying all necessary files to ansible control node"
                     sshagent (['ansible-server-key']) {
-                        sh "scp -o StrictHostKeyChecking=no ansible/* root@172.104.233.61:/root"
+                        sh "scp -o StrictHostKeyChecking=no ansible/* root@${ANSIBLE_SERVER}:/root"
                         withCredentials([sshUserPrivateKey(credentialsId: 'ansible-configured-ec2-server-key', keyFileVariable: 'keyfile', usernameVariable: 'user')]) {
-                            sh 'scp $keyfile root@172.104.233.61:/root/ssh-key.pem'
+                            sh 'scp $keyfile root@$ANSIBLE_SERVER:/root/ssh-key.pem'
                         }
                     }
                 }
@@ -27,12 +27,13 @@ agent any
                     echo "calling ansible playbook to configure ec2 instances"
                     def remote = [:]
                     remote.name = "my-ansible-server"
-                    remote.host = "172.104.233.61"
+                    remote.host = env.ANSIBLE_SERVER
                     remote.allowAnyHosts = true
                     
                     withCredentials([sshUserPrivateKey(credentialsId: 'ansible-server-key', keyFileVariable: 'keyfile', usernameVariable: 'user')]) {
                         remote.user = user
                         remote.identityFile = keyfile
+                        // sshScript remote: remote, script: "prepare-ansible-server.sh"
                         sshCommand remote: remote, command: "ansible-playbook my-playbook.yaml"
                     }
                 }

@@ -1,0 +1,14 @@
+---
+plugin: aws_ec2
+regions:
+ - us-west-1
+
+# target only specific servers
+# filters:
+#   tag:Name: dev*
+
+# create dynamic groups
+keyed_groups:
+  - key: tags
+  - key: instance_type
+    prefix: instance_type

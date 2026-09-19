@@ -1,0 +1,33 @@
+---
+- name: Install Docker
+  hosts: all
+  become: yes
+  tasks:
+    - name: Make sure docker is installed
+      yum:
+        name: docker
+        update_cache: yes
+        state: installed
+    - name: Ensure docker daemon is started
+      systemd:
+        name: docker
+        state: started
+
+- name: Install Docker-compose
+  hosts: all
+  tasks:
+    - name: Ensure docker-compose directory is present
+      file:
+        path: ~/.docker/cli-plugins
+        state: directory
+    - name: Get architecture of remote machine
+      shell: uname -m
+      register: remote_architecture
+    - name: Get architecture of remote machine
+      shell: uname -s
+      register: remote_os
+    - name: Ensure docker-compose is installed
+      get_url:
+        url: https://github.com/docker/compose/releases/latest/download/docker-compose-{{remote_os.stdout}}-{{remote_architecture.stdout}}
+        dest: ~/.docker/cli-plugins/docker-compose
+        mode: +x

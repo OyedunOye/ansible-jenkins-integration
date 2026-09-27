@@ -190,6 +190,7 @@ sudo systemctl status docker
 docker compose version
 ```
 
+## Screenshots
 ![Jenkins pipeline success](https://res.cloudinary.com/dpav6x91z/image/upload/v1790527786/Screenshot_2026-09-19_130106_hraa7z.png)
 ![Pipeline console confirmation logs](https://res.cloudinary.com/dpav6x91z/image/upload/v1790527791/Screenshot_2026-09-19_202031_ahucnu.png)
 ![Pipeline console confirmation logs cont'd](https://res.cloudinary.com/dpav6x91z/image/upload/v1790527825/Screenshot_2026-09-19_202059_uan8ky.png)

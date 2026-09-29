@@ -4,6 +4,9 @@ This project shows how to run Ansible from a Jenkins pipeline without installing
 
 The playbook installs and starts Docker and installs the Docker Compose plugin on every EC2 instance it finds.
 
+## Tech Stack
+Ansible, Jenkins, Hetzner Cloud, AWS, Boto3, Docker, Java, Maven, Linux, Git
+
 ## How it works
 
 ```
